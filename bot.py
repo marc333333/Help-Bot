@@ -2,6 +2,7 @@ import discord
 import requests
 
 from bot.utils import Utils
+from bot.command import Command
 
 TOKEN = Utils.get_token()
 
@@ -13,7 +14,9 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith("$hello"):
+    await Command.execute(client, message)
+
+    """if message.content.startswith("$hello"):
         msg = "Hello {0.author.mention}".format(message)
         await client.send_message(message.channel, msg)
         
@@ -37,7 +40,7 @@ async def on_message(message):
             url = definition["permalink"]
         )
         
-        await client.send_message(message.channel, embed=embed)
+        await client.send_message(message.channel, embed=embed)"""
 
 @client.event
 async def on_ready():
