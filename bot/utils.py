@@ -2,7 +2,7 @@ class Utils:
     @staticmethod
     def get_token():
         with open("bot.token") as f:
-            return f.readline()
+            return f.readline().strip()
 
     @staticmethod
     def get_top_definition(word):
