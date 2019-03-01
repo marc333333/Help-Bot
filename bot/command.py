@@ -1,5 +1,5 @@
-from bot.command_handler import CommandHandler
-from bot.command_list import CommandList
+from bot.utils import Utils
+from bot.command_handler import CommandHandler, CommandList
 
 class Command:
     PREFIX = "$"
@@ -11,24 +11,13 @@ class Command:
         if q is None:
             return
 
-        command = q["command"]
-        params = q["params"]
-
         Command.log_query(query)
 
-        last_match = None
-        for c in CommandList.commands:
-            for a in c["aliases"]:
-                if command == a:
-                    last_match = c
-                    if len(params) == c["params_count"]:
-                        Command.log_command(command, params)
-                        await c["handler"](client, query, params)
-                        return
-
-        if last_match is not None:
-            Command.log_command("help", [last_match["aliases"][0]])
-            await CommandHandler.help(client, query, last_match)
+        command = Utils.find_command(q["command"], len(q["params"]))
+       
+        if command is not None:
+            Command.log_command(q["command"], q["params"])
+            await command["handler"](client, query, command, q["params"])
         
     @staticmethod
     def parse(query):

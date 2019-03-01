@@ -1,10 +1,10 @@
 import discord
 import requests
 
-from bot.utils import Utils
-from bot.command import Command
+from bot.utils import get_token
+from bot.command import execute
 
-TOKEN = Utils.get_token()
+TOKEN = utils.get_token()
 
 client = discord.Client()
 
