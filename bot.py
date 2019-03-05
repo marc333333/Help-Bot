@@ -1,16 +1,18 @@
 print("Starting...")
 
 import discord
+from googleapiclient.discovery import build
 
 import utils
 
 PREFIX = "$" # 1 character only
 DEBUG = True
+TOKEN = utils.get_token("bot")
+
+client = discord.Client()
+service = build("customsearch", "v1", developerKey = utils.get_token("google"))
 
 commands = None
-
-TOKEN = utils.get_token()
-client = discord.Client()
 
 """
    _____ ____  __  __ __  __          _   _ _____   _____ 
@@ -76,8 +78,27 @@ async def meaning(query, command, params):
         )
         
         await client.send_message(query.channel, embed=embed)
-    except IndexError as e:
+    except Exception as e:
         await client.send_message(query.channel, "No definition found for {0}".format(word))
+
+# Image
+async def image(query, command, params):
+    if len(params) < 1:
+        await help_error(query, command, params)
+        return
+
+    word = " ".join(params)
+
+    res = service.cse().list(
+        q = word,
+        cx = "017064401556617570624:1l1erxhxwm0",
+        searchType = "image"
+    ).execute()
+
+    try:
+        await client.send_message(query.channel, res["items"][0]["link"])
+    except Exception as e:
+        await client.send_message(query.channel, "No result found for {0}".format(word))
     
 commands = [
     { "aliases": ["help"], "param_count": 0, "handler": help_all, "usage": "Usage: help" },
@@ -85,6 +106,7 @@ commands = [
     { "aliases": ["hello", "hi"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
     { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" },
     { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
+    { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" }
 ]
 
 """

@@ -1,7 +1,7 @@
 import requests
 
-def get_token():
-    with open("bot.token") as f:
+def get_token(name):
+    with open(name + ".token") as f:
         return f.readline().strip()
 
 def get_top_definition(word):
