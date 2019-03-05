@@ -92,6 +92,7 @@ async def image(query, command, params):
     res = service.cse().list(
         q = word,
         cx = "017064401556617570624:1l1erxhxwm0",
+        safe = "active",
         searchType = "image"
     ).execute()
 
