@@ -1,3 +1,5 @@
+import requests
+
 def get_token():
     with open("bot.token") as f:
         return f.readline().strip()
