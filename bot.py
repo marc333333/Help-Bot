@@ -1,9 +1,11 @@
+print("Starting...")
+
 import discord
 import requests
 
 import utils
 
-PREFIX = "$"
+PREFIX = "$" # 1 character only
 DEBUG = True
 
 commands = None
@@ -130,9 +132,17 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    print("Logged in as")
-    print(client.user.name)
-    print(client.user.id)
-    print("------------")
+    print("""
+  _    _ ______ _      _____    ____   ____ _______ 
+ | |  | |  ____| |    |  __ \  |  _ \ / __ \__   __|
+ | |__| | |__  | |    | |__) | | |_) | |  | | | |   
+ |  __  |  __| | |    |  ___/  |  _ <| |  | | | |   
+ | |  | | |____| |____| |      | |_) | |__| | | |   
+ |_|  |_|______|______|_|      |____/ \____/  |_|   
+                                                                         
+    """)
+    
+    print("Ready")
+    print("----------------------------------------------------")
 
 client.run(TOKEN)
