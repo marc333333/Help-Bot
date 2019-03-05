@@ -56,27 +56,35 @@ async def alias(query, command, params):
 
 # Meaning
 async def meaning(query, command, params):
-    word = params[0]
-    definition = utils.get_top_definition(word)
-    
-    embed=discord.Embed(
-        title = "Top definition of " + word,
-        url = definition["permalink"],
-        description = definition["definition"].replace('[', '').replace(']', ''),
-        color = 0xff8000
-    )
-    embed.set_author(
-        name = "Urban Dictionary",
-    )
-    
-    await client.send_message(query.channel, embed=embed)
+    if len(params) < 1:
+        await help_error(query, command, params)
+        return
 
+    word = " ".join(params)
+
+    try:
+        definition = utils.get_top_definition(word)
+
+        embed=discord.Embed(
+            title = "Top definition of " + word,
+            url = definition["permalink"],
+            description = definition["definition"].replace('[', '').replace(']', ''),
+            color = 0xff8000
+        )
+        embed.set_author(
+            name = "Urban Dictionary",
+        )
+        
+        await client.send_message(query.channel, embed=embed)
+    except IndexError as e:
+        await client.send_message(query.channel, "No definition found for {0}".format(word))
+    
 commands = [
     { "aliases": ["help"], "param_count": 0, "handler": help_all, "usage": "Usage: help" },
     { "aliases": ["help"], "param_count": 1, "handler": help, "usage": "Usage: help <command>" },
-    { "aliases": ["hello"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
+    { "aliases": ["hello", "hi"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
     { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" },
-    { "aliases": ["meaning", "define", "definition"], "param_count": 1, "handler": meaning, "usage": "Usage: meaning <word>" },
+    { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
 ]
 
 """
@@ -104,7 +112,7 @@ def find_command(command, param_count):
         for a in c["aliases"]:
             if command == a:
                 last_match = c
-                if param_count == c["param_count"] or param_count == -1:
+                if param_count == c["param_count"] or param_count == -1 or c["param_count"] == -1:
                     return c
     if last_match is None:
         return None
