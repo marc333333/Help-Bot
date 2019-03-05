@@ -42,10 +42,41 @@ async def hello(query, command, params):
     msg = "Hello {0.author.mention}".format(query)
     await client.send_message(query.channel, msg)
 
+async def alias(query, command, params):
+    c = find_command(params[0], -1)
+    if c is None or len(c["aliases"]) < 2:
+        await client.send_message(query.channel, "No alias found for {0}".format(params[0]))
+    else:
+        msg = "Aliases for {0}: {1}".format(c["aliases"][0], ", ".join(c["aliases"][1:]))
+        await client.send_message(query.channel, msg)
+
+async def meaning(query, command, params):
+    params = message.content.split(' ')
+    if (len(params) != 2):
+        msg = "Error: Invalid format\n\nUsage: $meaning <word>"
+        await client.send_message(message.channel, msg)
+        return
+    
+    word = params[-1]
+    definition = getDefinition(word)
+    
+    embed=discord.Embed(
+        title = "Top definition of " + word,
+        description = definition["definition"].replace('[', '').replace(']', ''),
+        color = 0xff8000
+    )
+    embed.set_author(
+        name = "Urban Dictionary",
+        url = definition["permalink"]
+    )
+    
+    await client.send_message(message.channel, embed=embed)
+
 commands = [
     { "aliases": ["help"], "param_count": 0, "handler": help_all, "usage": "Usage: help" },
     { "aliases": ["help"], "param_count": 1, "handler": help, "usage": "Usage: help <command>" },
-    { "aliases": ["hello"], "param_count": 0, "handler": hello, "usage": "Usage: hello" }
+    { "aliases": ["hello"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
+    { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" }
 ]
 
 """
@@ -103,33 +134,7 @@ async def on_message(message):
     if command is not None:
         log_command(query["command"], query["params"])
         await command["handler"](message, command, query["params"])
-
-    """if message.content.startswith("$hello"):
-        msg = "Hello {0.author.mention}".format(message)
-        await client.send_message(message.channel, msg)
         
-    elif message.content.startswith("$meaning"):
-        params = message.content.split(' ')
-        if (len(params) != 2):
-            msg = "Error: Invalid format\n\nUsage: $meaning <word>"
-            await client.send_message(message.channel, msg)
-            return
-        
-        word = params[-1]
-        definition = getDefinition(word)
-        
-        embed=discord.Embed(
-            title = "Top definition of " + word,
-            description = definition["definition"].replace('[', '').replace(']', ''),
-            color = 0xff8000
-        )
-        embed.set_author(
-            name = "Urban Dictionary",
-            url = definition["permalink"]
-        )
-        
-        await client.send_message(message.channel, embed=embed)"""
-
 @client.event
 async def on_ready():
     print("""
