@@ -118,8 +118,8 @@ commands = [
     { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" },
     { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
     { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" },
-	{ "aliases": ["loli"], "param_count": 0, "handler": loli, "usage": "Usage: loli" },
-	{ "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" }
+    { "aliases": ["loli"], "param_count": 0, "handler": loli, "usage": "Usage: loli" },
+    { "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" }
 ]
 
 """
