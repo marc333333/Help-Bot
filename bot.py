@@ -100,6 +100,16 @@ async def image(query, command, params):
         await client.send_message(query.channel, res["items"][0]["link"])
     except Exception as e:
         await client.send_message(query.channel, "No result found for {0}".format(word))
+		
+# Loli
+async def loli(query, command, params):
+    msg = "FBI open up!\nhttps://media1.tenor.com/images/93d11bc59526ce49f60766f0045d819b/tenor.gif"
+    await client.send_message(query.channel, msg)
+	
+# Yiff
+async def yiff(query, command, params):
+    msg = "https://static1.fjcdn.com/thumbnails/comments/Cap+the+furries+yiff+war+now+_70a08678fdc5611ed8a31eefc551f2cc.gif"
+    await client.send_message(query.channel, msg)
     
 commands = [
     { "aliases": ["help"], "param_count": 0, "handler": help_all, "usage": "Usage: help" },
@@ -107,7 +117,9 @@ commands = [
     { "aliases": ["hello", "hi"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
     { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" },
     { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
-    { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" }
+    { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" },
+	{ "aliases": ["loli"], "param_count": 0, "handler": loli, "usage": "Usage: loli" },
+	{ "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" }
 ]
 
 """
