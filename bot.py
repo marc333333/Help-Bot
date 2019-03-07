@@ -94,23 +94,31 @@ async def image(query, command, params):
     word = " ".join(params)
 
     split = word.split("|")
-    if (len(split) > 2):
+    if len(split) > 2:
         await help_error(query, command, params)
         return
+    random = False
+    if len(split) == 2:
+        if split[1].strip() == "random":
+            random = True
+        else:
+            await help_error(query, command, params)
+            return
 
     res = service.cse().list(
-        q = split[0],
+        q = split[0].strip(),
         cx = "017064401556617570624:1l1erxhxwm0",
         safe = "active",
         searchType = "image"
     ).execute()
 
     try:
-        if (len(split) < 2):
-            await client.send_message(query.channel, res["items"][0]["link"])
-        else:
+        if random:
             rnd = randint(0, len(res["items"]))
             await client.send_message(query.channel, res["items"][rnd]["link"])
+        else:
+            await client.send_message(query.channel, res["items"][0]["link"])
+
     except Exception as e:
         await client.send_message(query.channel, "No result found for {0}".format(word))
 		
