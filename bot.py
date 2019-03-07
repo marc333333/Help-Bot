@@ -114,7 +114,7 @@ async def image(query, command, params):
 
     try:
         if random:
-            rnd = randint(0, len(res["items"]))
+            rnd = randint(0, len(res["items"] - 1))
             await client.send_message(query.channel, res["items"][rnd]["link"])
         else:
             await client.send_message(query.channel, res["items"][0]["link"])
