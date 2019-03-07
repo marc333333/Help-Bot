@@ -1,6 +1,9 @@
 print("Starting...")
 
 import discord
+import asyncio
+
+from random import randint
 from googleapiclient.discovery import build
 
 import utils
@@ -39,6 +42,7 @@ async def help_error(query, command, params):
 # Help All
 async def help_all(query, command, params):
     cmds = list(set(str(c["aliases"][0]) for c in commands))
+    cmds.sort()
     msg = "Available commands: {0}\n\nUse \"help <command>\" for commands usage".format(", ".join(cmds))
     await client.send_message(query.channel, msg)
 
@@ -110,7 +114,28 @@ async def loli(query, command, params):
 async def yiff(query, command, params):
     msg = "https://static1.fjcdn.com/thumbnails/comments/Cap+the+furries+yiff+war+now+_70a08678fdc5611ed8a31eefc551f2cc.gif"
     await client.send_message(query.channel, msg)
-    
+
+async def random(query, command, params):
+    try:
+        min = int(params[0])
+        max = int(params[1])
+
+        result = randint(min, max)
+
+        msg = await client.send_message(query.channel, ":spades: :hearts: :diamonds: :clubs:")
+        await asyncio.sleep(0.5)
+        await client.edit_message(msg, ":diamonds: :clubs: :hearts: :spades:")
+        await asyncio.sleep(0.5)
+        await client.edit_message(msg, ":clubs: :diamonds: :spades: :hearts:")
+        await asyncio.sleep(0.5)
+        await client.edit_message(msg, ":hearts: :spades: :clubs: :diamonds:")
+        await asyncio.sleep(0.5)
+        await client.delete_message(msg)
+
+        await client.send_message(query.channel, result)
+    except Exception as e:
+        await help_error(query, command, params)
+
 commands = [
     { "aliases": ["help"], "param_count": 0, "handler": help_all, "usage": "Usage: help" },
     { "aliases": ["help"], "param_count": 1, "handler": help, "usage": "Usage: help <command>" },
@@ -119,7 +144,8 @@ commands = [
     { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
     { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" },
     { "aliases": ["loli"], "param_count": 0, "handler": loli, "usage": "Usage: loli" },
-    { "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" }
+    { "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" },
+    { "aliases": ["random"], "param_count": 2, "handler": random, "usage": "Usage: random <min> <max>" }
 ]
 
 """
