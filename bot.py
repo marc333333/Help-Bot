@@ -105,8 +105,9 @@ async def image(query, command, params):
             await help_error(query, command, params)
             return
 
+    q = split[0].strip()
     res = service.cse().list(
-        q = split[0].strip(),
+        q = q,
         cx = "017064401556617570624:1l1erxhxwm0",
         safe = "active",
         searchType = "image"
@@ -114,13 +115,14 @@ async def image(query, command, params):
 
     try:
         if random:
-            rnd = randint(0, len(res["items"] - 1))
+            rnd = randint(0, len(res["items"]) - 1)
             await client.send_message(query.channel, res["items"][rnd]["link"])
         else:
             await client.send_message(query.channel, res["items"][0]["link"])
 
     except Exception as e:
-        await client.send_message(query.channel, "No result found for {0}".format(word))
+        raise e
+        await client.send_message(query.channel, "No result found for {0}".format(q))
 		
 # Loli
 async def loli(query, command, params):
