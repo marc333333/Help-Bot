@@ -93,15 +93,24 @@ async def image(query, command, params):
 
     word = " ".join(params)
 
+    split = word.split("|")
+    if (len(split) > 2):
+        await help_error(query, command, params)
+        return
+
     res = service.cse().list(
-        q = word,
+        q = split[0],
         cx = "017064401556617570624:1l1erxhxwm0",
         safe = "active",
         searchType = "image"
     ).execute()
 
     try:
-        await client.send_message(query.channel, res["items"][0]["link"])
+        if (len(split) < 2):
+            await client.send_message(query.channel, res["items"][0]["link"])
+        else:
+            rnd = randint(0, len(res["items"]))
+            await client.send_message(query.channel, res["items"][rnd]["link"])
     except Exception as e:
         await client.send_message(query.channel, "No result found for {0}".format(word))
 		
@@ -142,7 +151,7 @@ commands = [
     { "aliases": ["hello", "hi"], "param_count": 0, "handler": hello, "usage": "Usage: hello" },
     { "aliases": ["alias", "aliases"], "param_count": 1, "handler": alias, "usage": "Usage: alias <command>" },
     { "aliases": ["meaning", "define", "definition"], "param_count": -1, "handler": meaning, "usage": "Usage: meaning <word>" },
-    { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word>" },
+    { "aliases": ["image", "picture"], "param_count": -1, "handler": image, "usage": "Usage: image <word> [| random]" },
     { "aliases": ["loli"], "param_count": 0, "handler": loli, "usage": "Usage: loli" },
     { "aliases": ["yiff"], "param_count": 0, "handler": yiff, "usage": "Usage: yiff" },
     { "aliases": ["random"], "param_count": 2, "handler": random, "usage": "Usage: random <min> <max>" }
