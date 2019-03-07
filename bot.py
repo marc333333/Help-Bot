@@ -8,7 +8,7 @@ from googleapiclient.discovery import build
 
 import utils
 
-PREFIX = "$" # 1 character only
+PREFIX = "$"
 DEBUG = True
 TOKEN = utils.get_token("bot")
 
@@ -159,10 +159,12 @@ commands = [
 """
 
 def parse(query):
+    log_message(query)
+
     content = query.content
-    if query.content[0] != PREFIX:
+    if not content.startswith(PREFIX):
         return None
-    content = content[1:]
+    content = content[len(PREFIX):]
 
     split = content.split(' ')
     return { "command": split[0], "params": split[1:] }
@@ -186,6 +188,10 @@ def log_query(query):
 def log_command(command, params):
     if DEBUG:
         print("[DEBUG] [EXECUTION] Command: {0} ; Params: {1}".format(command, ", ".join(str(p) for p in params)))
+		
+def log_message(query):
+	if DEBUG:
+		print("[DEBUG] [MESSAGE] Author: {0.author} ; Content: {0.content}".format(query))
 
 @client.event
 async def on_message(message):
