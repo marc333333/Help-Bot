@@ -83,6 +83,7 @@ async def meaning(query, command, params):
         
         await client.send_message(query.channel, embed=embed)
     except Exception as e:
+        log_error(e)
         await client.send_message(query.channel, "No definition found for {0}".format(word))
 
 # Image
@@ -121,7 +122,7 @@ async def image(query, command, params):
             await client.send_message(query.channel, res["items"][0]["link"])
 
     except Exception as e:
-        raise e
+        log_error(e)
         await client.send_message(query.channel, "No result found for {0}".format(q))
 		
 # Loli
@@ -153,6 +154,7 @@ async def random(query, command, params):
 
         await client.send_message(query.channel, result)
     except Exception as e:
+        log_error(e)
         await help_error(query, command, params)
 
 commands = [
@@ -211,6 +213,10 @@ def log_command(command, params):
 def log_message(query):
 	if DEBUG:
 		print("[DEBUG] [MESSAGE] Author: {0.author} ; Content: {0.content}".format(query))
+		
+def log_error(error):
+	if DEBUG:
+		print("[DEBUG] [ERROR] {0}".format(error))
 
 @client.event
 async def on_message(message):
